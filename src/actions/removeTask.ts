@@ -1,4 +1,4 @@
-import TaskAction from "../interfaces/taskaction"
+import TaskAction from "../interfaces/taskaction";
 
 const removeTask = (key:number):TaskAction =>{
     return {
