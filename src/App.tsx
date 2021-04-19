@@ -1,13 +1,20 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import addTask from "./actions/addTask";
-import { taskState } from "./reducers/taskreducer";
-import { DeleteRounded, AddRounded, SearchRounded } from "@material-ui/icons";
+import { taskState, taskType } from "./reducers/taskreducer";
+import {
+  DeleteRounded,
+  Clear,
+  AddRounded,
+  SearchRounded,
+} from "@material-ui/icons";
+//import Search from "./screens/search";
 import { motion } from "framer-motion";
 import {
   Button,
   TextField,
   Card,
+  IconButton,
   CardContent,
   CardActions,
   AppBar,
@@ -38,6 +45,7 @@ const styles = {
   },
   btn: {
     marginLeft: "1rem",
+    color: "#fafafa",
   },
   card: {
     margin: "1rem",
@@ -45,7 +53,9 @@ const styles = {
 };
 
 const App: React.FC = () => {
-  const [taskEntry, setTaskEntry] = useState("");
+  const [taskEntry, setTaskEntry] = useState<string>("");
+  const [isSearch, setSearch] = useState<boolean>(false);
+  const [searchItems, setSearchItems] = useState<taskType[]>([]);
   const dispatch = useDispatch();
   const allTask = useSelector<taskState, taskState>((state) => state);
   const addTaskRoutine = (): void => {
@@ -53,7 +63,7 @@ const App: React.FC = () => {
     setTaskEntry("");
   };
   const searchTask = (title: string) => {
-    console.log(allTask.filter((tasks) => tasks.title.match(title)));
+    setSearchItems(allTask.filter((tasks) => tasks.title.match(title)));
   };
   const removeTaskRoutine = (key: number): void => {
     dispatch(removeTask(key));
@@ -67,10 +77,16 @@ const App: React.FC = () => {
           <div style={styles.searchInputBg}>
             <InputBase
               style={styles.searchInput}
-              onChange={(e) => searchTask(e.target.value)}
+              onChange={(e) => {
+                searchTask(e.target.value);
+                setSearch(true);
+              }}
             />
           </div>
-	  <SearchRounded style={styles.btn}/>
+          <SearchRounded style={styles.btn} />
+          <IconButton style={styles.btn} onClick={() => setSearch(false)}>
+            <Clear />
+          </IconButton>
         </Toolbar>
       </AppBar>
       <main>
@@ -92,35 +108,65 @@ const App: React.FC = () => {
           </Button>
         </div>
         <div>
-          {allTask.map((task, key) => (
-            <React.Fragment key={key}>
-              <motion.div
-                initial={{
-                  y: -20,
-                  opacity: 0,
-                }}
-                animate={{
-                  y: 0,
-                  opacity: 100,
-                }}
-              >
-                <Card style={styles.card} elevation={3}>
-                  <CardContent>
-                    <Typography>{task.title}</Typography>
-                  </CardContent>
-                  <CardActions>
-                    <Button
-                      size="small"
-                      onClick={() => removeTaskRoutine(task.id)}
-                    >
-                      Delete
-                      <DeleteRounded />
-                    </Button>
-                  </CardActions>
-                </Card>
-              </motion.div>
-            </React.Fragment>
-          ))}
+          {isSearch
+            ? searchItems.map((task, key) => (
+                <React.Fragment key={key}>
+                  <motion.div
+                    initial={{
+                      y: -20,
+                      opacity: 0,
+                    }}
+                    animate={{
+                      y: 0,
+                      opacity: 100,
+                    }}
+                  >
+                    <Card style={styles.card} elevation={3}>
+                      <CardContent>
+                        <Typography>{task.title}</Typography>
+                      </CardContent>
+                      <CardActions>
+                        <Button
+                          size="small"
+                          onClick={() => removeTaskRoutine(task.id)}
+                        >
+                          Delete
+                          <DeleteRounded />
+                        </Button>
+                      </CardActions>
+                    </Card>
+                  </motion.div>
+                </React.Fragment>
+	    ))
+            : allTask.map((task, key) => (
+                <React.Fragment key={key}>
+                  <motion.div
+                    initial={{
+                      y: -20,
+                      opacity: 0,
+                    }}
+                    animate={{
+                      y: 0,
+                      opacity: 100,
+                    }}
+                  >
+                    <Card style={styles.card} elevation={3}>
+                      <CardContent>
+                        <Typography>{task.title}</Typography>
+                      </CardContent>
+                      <CardActions>
+                        <Button
+                          size="small"
+                          onClick={() => removeTaskRoutine(task.id)}
+                        >
+                          Delete
+                          <DeleteRounded />
+                        </Button>
+                      </CardActions>
+                    </Card>
+                  </motion.div>
+                </React.Fragment>
+              ))}
         </div>
       </main>
     </>
