@@ -8,7 +8,6 @@ import {
   AddRounded,
   SearchRounded,
 } from "@material-ui/icons";
-//import Search from "./screens/search";
 import { motion } from "framer-motion";
 import {
   Button,
@@ -137,7 +136,7 @@ const App: React.FC = () => {
                     </Card>
                   </motion.div>
                 </React.Fragment>
-	    ))
+              ))
             : allTask.map((task, key) => (
                 <React.Fragment key={key}>
                   <motion.div

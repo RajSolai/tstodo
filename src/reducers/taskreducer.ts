@@ -16,6 +16,7 @@ const taskReducer = (state:taskState=[],action:TaskAction) =>{
         case "add_task":
             return state =[userTask,...state];
         case "remove_task":
+            //console.log(state.filter(item=>item.id!==action.id));
             return state = state.filter(item=>item.id!==action.id);
         default:
             return state = [];
