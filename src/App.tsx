@@ -127,7 +127,10 @@ const App: React.FC = () => {
                       <CardActions>
                         <Button
                           size="small"
-                          onClick={() => removeTaskRoutine(task.id)}
+                          onClick={() => {
+                            removeTaskRoutine(task.id);
+                            setSearch(false);
+                          }}
                         >
                           Delete
                           <DeleteRounded />
